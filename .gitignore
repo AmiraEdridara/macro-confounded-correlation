@@ -10,3 +10,5 @@ data/raw/*
 data/processed/*
 !data/raw/.gitkeep
 !data/processed/.gitkeep
+!data/raw/fred_monthly.csv
+!data/raw/fred_quarterly.csv
