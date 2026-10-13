@@ -174,6 +174,8 @@ def main() -> None:
                 rows.append(dict(country=country, sample="main excl. oil shocks", method=f"VAR {spec}",
                                  horizon=h, estimate=pt, lo=lo, hi=hi))
 
+    extended_analysis(lines, rows, boots)
+
     text = "\n".join(lines)
     print(text)
     (OUT / "summary.txt").write_text(text + "\n")
@@ -181,6 +183,79 @@ def main() -> None:
     plot_price_responses(boots)
     plot_output_responses(boots)
     plot_oil_shock_test(boots)
+
+
+# ---------------------------------------------------------------------------
+# Extension past 2007: policy rates sat near zero for years, so I swap the
+# policy rate for a government bond yield, which kept moving with QE and
+# forward guidance. COVID months are left out because output swings in 2020
+# would dominate everything else.
+# ---------------------------------------------------------------------------
+
+COVID = ("2020-03", "2021-06")
+EXTENDED = {
+    # (yield column, start, end, label)
+    "US": [("y5", "1965-01", "2007-12", "5y yield, to 2007"),
+           ("y5", "1965-01", "2026-08", "5y yield, to 2026"),
+           ("y2", "1976-06", "2026-08", "2y yield, to 2026")],
+    "UK": [("y5", "1982-01", "2007-12", "5y yield, to 2007"),
+           ("y5", "1982-01", "2026-08", "5y yield, to 2026"),
+           ("y5", "1992-10", "2026-08", "5y yield, inflation targeting to 2026")],
+}
+
+
+def outside_covid(index: pd.DatetimeIndex) -> np.ndarray:
+    s, e = pd.Timestamp(COVID[0]), pd.Timestamp(COVID[1])
+    return ~((index >= s) & (index <= e))
+
+
+def extended_analysis(lines: list, rows: list, boots: dict) -> None:
+    lines.append("\n=== Extending past 2007: bond yield in place of the policy rate ===")
+    lines.append(f"Spec C (output, prices, commodity prices, yield). COVID months {COVID[0]} to {COVID[1]} left out.")
+    for country, runs in EXTENDED.items():
+        df_all = load(country)
+        for ycol, start, end, label in runs:
+            df = df_all.loc[start:end].copy()
+            df["rate"] = df[ycol]
+            lines.append(f"\n{country} {start} to {end} ({label})")
+
+            b, se, n = forecast_regression(df.loc[outside_covid(df.index)], 24, controls=True)
+            lines.append(f"  Regression, h=24 with controls: {b:+.2f} (se {se:.2f}, n={n})")
+            rows.append(dict(country=country, sample=label, method="regression with controls",
+                             horizon=24, estimate=b, lo=b - 1.645 * se, hi=b + 1.645 * se))
+
+            data = df[SPECS["C: + commodity prices"]].dropna()
+            boot = bootstrap_irf(data, LAGS, HORIZON, "rate", reps=REPS, keep=outside_covid(data.index))
+            boots[(country, label, "C: + commodity prices")] = boot
+            for var in ["prices", "output"]:
+                s = summarise(boot, var)
+                txt = "  ".join(f"{h}m {v[0]:+.2f} [{v[1]:+.2f},{v[2]:+.2f}]" for h, v in s.items())
+                lines.append(f"  VAR {var:7s} {txt}")
+                for h, (pt, lo, hi) in s.items():
+                    rows.append(dict(country=country, sample=label, method=f"VAR C ({var})",
+                                     horizon=h, estimate=pt, lo=lo, hi=hi))
+    plot_extended(boots)
+
+
+def plot_extended(boots: dict) -> None:
+    spec = "C: + commodity prices"
+    fig, axes = plt.subplots(2, 2, figsize=(11, 7.6), sharex=True)
+    for col, country in enumerate(["US", "UK"]):
+        for row, var in enumerate(["prices", "output"]):
+            ax = axes[row, col]
+            _band(ax, boots[(country, "5y yield, to 2007", spec)], var, "#7f8c8d", "5y yield, to 2007")
+            _band(ax, boots[(country, "5y yield, to 2026", spec)], var, "#8e44ad", "5y yield, to 2026")
+            ax.axhline(0, color="black", lw=0.8)
+            what = "Price level" if var == "prices" else "Industrial production"
+            ax.set_title(f"{country}: {what.lower()} after +1pp 5-year yield shock")
+            ax.grid(alpha=0.3)
+            if col == 0:
+                ax.set_ylabel(f"% change in {what.lower()}")
+            if row == 1:
+                ax.set_xlabel("Months after shock")
+    axes[0, 0].legend(frameon=False, fontsize=9)
+    fig.tight_layout()
+    fig.savefig(OUT / "extended_to_2026.png", dpi=150, bbox_inches="tight")
 
 
 def plot_oil_shock_test(boots: dict) -> None:

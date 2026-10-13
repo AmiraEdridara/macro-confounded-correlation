@@ -8,6 +8,8 @@ Each panel has the same columns so the same model can run on both countries:
     rate     policy interest rate, % (Fed funds / Bank Rate)
     infl     12-month CPI inflation, %
     unemp    unemployment rate, %
+    y5       5-year government bond yield, % (US Treasury / UK gilt)
+    y2       2-year Treasury yield, % (US only)
 """
 
 from pathlib import Path
@@ -47,6 +49,9 @@ def load_us() -> pd.DataFrame:
     out["rate"] = m["FEDFUNDS"]
     out["infl"] = 100 * (m["CPIAUCSL"] / m["CPIAUCSL"].shift(12) - 1)
     out["unemp"] = m["UNRATE"]
+    ylds = _monthly_index(pd.read_csv(RAW / "fred_treasury_yields.csv", index_col=0))
+    out["y5"] = ylds["GS5"].reindex(out.index)
+    out["y2"] = ylds["GS2"].reindex(out.index)
     return out
 
 
@@ -73,6 +78,8 @@ def load_uk() -> pd.DataFrame:
     cpi = uk_cpi().reindex(out.index)
     out["infl"] = 100 * (cpi / cpi.shift(12) - 1)  # 12-month change needs no seasonal adjustment
     out["unemp"] = ons["UNEMP"]
+    gilt = _monthly_index(pd.read_csv(RAW / "uk_gilt_5y.csv", index_col=0))["GILT_5Y"]
+    out["y5"] = gilt.reindex(out.index)
     return out
 
 

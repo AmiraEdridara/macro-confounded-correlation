@@ -39,4 +39,15 @@ Output gap = `100 * (GDPC1 - GDPPOT) / GDPPOT`.
 | | IOP: index of production, CVM SA (ONS K222) | ONS | Jan 1970 to Aug 2026 |
 | `raw/uk_oecd_cpi_1970_1988.csv` | CPI_OECD: UK CPI, 2015=100 (FRED GBRCPIALLMINMEI) | OECD via FRED | Jan 1970 to Dec 1988 |
 
+## Bond yields (downloaded 16 October 2026)
+
+| File | Columns | Source | Coverage |
+|---|---|---|---|
+| `raw/fred_treasury_yields.csv` | GS2, GS5: 2-year and 5-year Treasury constant maturity yields, monthly average, % | FRED | GS5 from 1965, GS2 from Jun 1976, to Sep 2026 |
+| `raw/uk_gilt_5y.csv` | GILT_5Y: 5-year nominal zero coupon gilt yield, monthly average, % | Bank of England database, series IUMASNZC | Jan 1982 to Sep 2026 |
+
+The Bank of England database has monthly gilt yields at 5, 10 and 20 years only, so the 5-year is used for both countries.
+
+## Notes
+
 The ONS CPI starts in 1988, so `src/load_data.py` extends it back using the OECD series' growth rates, rescaled to match ONS in January 1988. The two indexes differ in level by about 3% because of vintage and rounding differences.
