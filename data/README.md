@@ -28,3 +28,15 @@ Most recent months may be blank where FRED hasn't published yet. October 2025 is
 | GDPPOT | CBO real potential GDP | Chained 2017 $bn |
 
 Output gap = `100 * (GDPC1 - GDPPOT) / GDPPOT`.
+
+## UK files (downloaded 16 October 2026)
+
+| File | Columns | Source | Coverage |
+|---|---|---|---|
+| `raw/uk_bank_rate.csv` | BANK_RATE: monthly average of official Bank Rate, % | Bank of England database, series IUMABEDR | Jan 1975 to Sep 2026 |
+| `raw/uk_ons_monthly.csv` | CPI: CPI index 2015=100, NSA (ONS D7BT) | ONS | Jan 1988 to Aug 2026 |
+| | UNEMP: unemployment rate 16+, %, SA, rolling 3 months (ONS MGSX) | ONS | Feb 1971 to Jun 2026 |
+| | IOP: index of production, CVM SA (ONS K222) | ONS | Jan 1970 to Aug 2026 |
+| `raw/uk_oecd_cpi_1970_1988.csv` | CPI_OECD: UK CPI, 2015=100 (FRED GBRCPIALLMINMEI) | OECD via FRED | Jan 1970 to Dec 1988 |
+
+The ONS CPI starts in 1988, so `src/load_data.py` extends it back using the OECD series' growth rates, rescaled to match ONS in January 1988. The two indexes differ in level by about 3% because of vintage and rounding differences.

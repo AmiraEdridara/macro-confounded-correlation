@@ -1,0 +1,97 @@
+country,sample,method,horizon,estimate,lo,hi
+US,main,regression no controls,12,0.438,0.23,0.646
+US,main,regression with controls,12,-0.11,-0.25,0.03
+US,main,regression no controls,24,0.148,-0.046,0.343
+US,main,regression with controls,24,-0.427,-0.646,-0.208
+US,main,VAR A: prices + rate,12,0.548,0.334,0.721
+US,main,VAR A: prices + rate,24,0.664,0.191,0.963
+US,main,VAR A: prices + rate,36,0.605,-0.117,1.05
+US,main,VAR A: prices + rate,48,0.446,-0.457,1.029
+US,main,VAR B: + output,12,0.314,0.096,0.483
+US,main,VAR B: + output,24,0.342,-0.069,0.645
+US,main,VAR B: + output,36,0.273,-0.326,0.636
+US,main,VAR B: + output,48,0.159,-0.525,0.575
+US,main,VAR B: + output (output),12,-0.751,-1.177,-0.355
+US,main,VAR B: + output (output),24,-1.01,-1.403,-0.739
+US,main,VAR B: + output (output),36,-0.991,-1.32,-0.575
+US,main,VAR B: + output (output),48,-0.856,-1.184,-0.327
+US,main,VAR C: + commodity prices,12,0.271,0.04,0.429
+US,main,VAR C: + commodity prices,24,0.172,-0.268,0.449
+US,main,VAR C: + commodity prices,36,-0.096,-0.709,0.263
+US,main,VAR C: + commodity prices,48,-0.433,-1.127,0.081
+US,main,VAR C: + commodity prices (output),12,-0.777,-1.258,-0.407
+US,main,VAR C: + commodity prices (output),24,-1.277,-1.699,-0.79
+US,main,VAR C: + commodity prices (output),36,-1.291,-1.56,-0.521
+US,main,VAR C: + commodity prices (output),48,-1.09,-1.329,-0.17
+US,post-Volcker,regression no controls,12,0.163,0.034,0.293
+US,post-Volcker,regression with controls,12,0.202,0.008,0.396
+US,post-Volcker,regression no controls,24,0.084,-0.072,0.239
+US,post-Volcker,regression with controls,24,0.254,0.09,0.418
+US,post-Volcker,VAR A: prices + rate,12,0.689,0.246,1.098
+US,post-Volcker,VAR A: prices + rate,24,0.893,0.008,1.589
+US,post-Volcker,VAR A: prices + rate,36,0.812,-0.332,1.728
+US,post-Volcker,VAR A: prices + rate,48,0.666,-0.422,1.635
+US,post-Volcker,VAR B: + output,12,0.473,-0.015,0.861
+US,post-Volcker,VAR B: + output,24,0.479,-0.408,1.044
+US,post-Volcker,VAR B: + output,36,0.329,-0.699,1.053
+US,post-Volcker,VAR B: + output,48,0.209,-0.705,0.91
+US,post-Volcker,VAR B: + output (output),12,0.216,-0.975,1.083
+US,post-Volcker,VAR B: + output (output),24,-0.522,-2.124,0.771
+US,post-Volcker,VAR B: + output (output),36,-0.622,-2.002,0.815
+US,post-Volcker,VAR B: + output (output),48,-0.247,-1.375,0.983
+US,post-Volcker,VAR C: + commodity prices,12,0.422,-0.053,0.737
+US,post-Volcker,VAR C: + commodity prices,24,0.381,-0.516,0.861
+US,post-Volcker,VAR C: + commodity prices,36,0.188,-0.779,0.772
+US,post-Volcker,VAR C: + commodity prices,48,0.039,-0.847,0.64
+US,post-Volcker,VAR C: + commodity prices (output),12,0.27,-0.913,1.106
+US,post-Volcker,VAR C: + commodity prices (output),24,-0.363,-2.084,0.961
+US,post-Volcker,VAR C: + commodity prices (output),36,-0.448,-1.892,1.029
+US,post-Volcker,VAR C: + commodity prices (output),48,-0.118,-1.221,1.31
+UK,main,regression no controls,12,0.866,0.637,1.095
+UK,main,regression with controls,12,0.449,0.236,0.662
+UK,main,regression no controls,24,0.552,0.334,0.769
+UK,main,regression with controls,24,0.08,-0.233,0.393
+UK,main,VAR A: prices + rate,12,0.945,0.544,1.254
+UK,main,VAR A: prices + rate,24,1.029,0.339,1.42
+UK,main,VAR A: prices + rate,36,0.904,0.15,1.374
+UK,main,VAR A: prices + rate,48,0.808,0.074,1.326
+UK,main,VAR B: + output,12,0.966,0.583,1.215
+UK,main,VAR B: + output,24,1.307,0.663,1.619
+UK,main,VAR B: + output,36,1.129,0.319,1.444
+UK,main,VAR B: + output,48,0.823,0.016,1.128
+UK,main,VAR B: + output (output),12,-0.794,-1.273,-0.272
+UK,main,VAR B: + output (output),24,-1.678,-2.205,-0.785
+UK,main,VAR B: + output (output),36,-1.773,-2.331,-0.54
+UK,main,VAR B: + output (output),48,-1.527,-2.025,-0.121
+UK,main,VAR C: + commodity prices,12,0.866,0.48,1.077
+UK,main,VAR C: + commodity prices,24,1.163,0.485,1.41
+UK,main,VAR C: + commodity prices,36,0.99,0.141,1.231
+UK,main,VAR C: + commodity prices,48,0.701,-0.094,0.931
+UK,main,VAR C: + commodity prices (output),12,-0.607,-1.089,-0.146
+UK,main,VAR C: + commodity prices (output),24,-1.398,-1.941,-0.528
+UK,main,VAR C: + commodity prices (output),36,-1.452,-2.017,-0.158
+UK,main,VAR C: + commodity prices (output),48,-1.188,-1.63,0.15
+UK,inflation targeting,regression no controls,12,0.02,-0.15,0.189
+UK,inflation targeting,regression with controls,12,-0.103,-0.203,-0.002
+UK,inflation targeting,regression no controls,24,-0.195,-0.385,-0.004
+UK,inflation targeting,regression with controls,24,-0.296,-0.4,-0.192
+UK,inflation targeting,VAR A: prices + rate,12,0.452,-0.163,1.026
+UK,inflation targeting,VAR A: prices + rate,24,0.08,-0.807,0.842
+UK,inflation targeting,VAR A: prices + rate,36,-0.222,-1.013,0.591
+UK,inflation targeting,VAR A: prices + rate,48,-0.256,-0.849,0.554
+UK,inflation targeting,VAR B: + output,12,-0.054,-0.468,0.574
+UK,inflation targeting,VAR B: + output,24,-0.625,-1.194,0.295
+UK,inflation targeting,VAR B: + output,36,-0.877,-1.53,0.321
+UK,inflation targeting,VAR B: + output,48,-1.074,-1.622,0.361
+UK,inflation targeting,VAR B: + output (output),12,-1.74,-3.174,0.168
+UK,inflation targeting,VAR B: + output (output),24,0.25,-0.974,2.066
+UK,inflation targeting,VAR B: + output (output),36,0.523,-0.875,1.332
+UK,inflation targeting,VAR B: + output (output),48,-0.046,-1.49,0.782
+UK,inflation targeting,VAR C: + commodity prices,12,0.094,-0.221,0.48
+UK,inflation targeting,VAR C: + commodity prices,24,-0.334,-0.727,0.246
+UK,inflation targeting,VAR C: + commodity prices,36,-0.769,-1.241,0.116
+UK,inflation targeting,VAR C: + commodity prices,48,-1.139,-1.692,0.049
+UK,inflation targeting,VAR C: + commodity prices (output),12,-1.915,-3.15,0.209
+UK,inflation targeting,VAR C: + commodity prices (output),24,0.096,-0.988,1.776
+UK,inflation targeting,VAR C: + commodity prices (output),36,0.538,-0.811,1.6
+UK,inflation targeting,VAR C: + commodity prices (output),48,0.225,-1.267,1.183

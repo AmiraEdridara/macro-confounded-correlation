@@ -1,0 +1,60 @@
+
+=== US 1965-01 to 2007-12 (main) ===
+Naive correlation of rate with inflation:
+  same month             +0.72
+  inflation 12m later    +0.51
+  inflation 24m later    +0.17
+Effect of +1pp rate today on inflation h months ahead (pp):
+  h=12 no controls   +0.44 (se 0.13, n=504)
+  h=12 with controls -0.11 (se 0.09, n=492)
+  h=24 no controls   +0.15 (se 0.12, n=492)
+  h=24 with controls -0.43 (se 0.13, n=480)
+VAR: response of price level (%) to a +1pp rate shock [90% band]:
+  A: prices + rate         12m +0.55 [+0.33,+0.72]  24m +0.66 [+0.19,+0.96]  36m +0.60 [-0.12,+1.05]  48m +0.45 [-0.46,+1.03]
+  B: + output              12m +0.31 [+0.10,+0.48]  24m +0.34 [-0.07,+0.64]  36m +0.27 [-0.33,+0.64]  48m +0.16 [-0.53,+0.58]
+  C: + commodity prices    12m +0.27 [+0.04,+0.43]  24m +0.17 [-0.27,+0.45]  36m -0.10 [-0.71,+0.26]  48m -0.43 [-1.13,+0.08]
+
+=== US 1984-01 to 2007-12 (post-Volcker) ===
+Naive correlation of rate with inflation:
+  same month             +0.59
+  inflation 12m later    +0.37
+  inflation 24m later    +0.19
+Effect of +1pp rate today on inflation h months ahead (pp):
+  h=12 no controls   +0.16 (se 0.08, n=276)
+  h=12 with controls +0.20 (se 0.12, n=264)
+  h=24 no controls   +0.08 (se 0.09, n=264)
+  h=24 with controls +0.25 (se 0.10, n=252)
+VAR: response of price level (%) to a +1pp rate shock [90% band]:
+  A: prices + rate         12m +0.69 [+0.25,+1.10]  24m +0.89 [+0.01,+1.59]  36m +0.81 [-0.33,+1.73]  48m +0.67 [-0.42,+1.64]
+  B: + output              12m +0.47 [-0.01,+0.86]  24m +0.48 [-0.41,+1.04]  36m +0.33 [-0.70,+1.05]  48m +0.21 [-0.70,+0.91]
+  C: + commodity prices    12m +0.42 [-0.05,+0.74]  24m +0.38 [-0.52,+0.86]  36m +0.19 [-0.78,+0.77]  48m +0.04 [-0.85,+0.64]
+
+=== UK 1975-01 to 2007-12 (main) ===
+Naive correlation of rate with inflation:
+  same month             +0.64
+  inflation 12m later    +0.63
+  inflation 24m later    +0.44
+Effect of +1pp rate today on inflation h months ahead (pp):
+  h=12 no controls   +0.87 (se 0.14, n=384)
+  h=12 with controls +0.45 (se 0.13, n=372)
+  h=24 no controls   +0.55 (se 0.13, n=372)
+  h=24 with controls +0.08 (se 0.19, n=360)
+VAR: response of price level (%) to a +1pp rate shock [90% band]:
+  A: prices + rate         12m +0.95 [+0.54,+1.25]  24m +1.03 [+0.34,+1.42]  36m +0.90 [+0.15,+1.37]  48m +0.81 [+0.07,+1.33]
+  B: + output              12m +0.97 [+0.58,+1.22]  24m +1.31 [+0.66,+1.62]  36m +1.13 [+0.32,+1.44]  48m +0.82 [+0.02,+1.13]
+  C: + commodity prices    12m +0.87 [+0.48,+1.08]  24m +1.16 [+0.48,+1.41]  36m +0.99 [+0.14,+1.23]  48m +0.70 [-0.09,+0.93]
+
+=== UK 1992-10 to 2007-12 (inflation targeting) ===
+Naive correlation of rate with inflation:
+  same month             +0.28
+  inflation 12m later    +0.04
+  inflation 24m later    -0.35
+Effect of +1pp rate today on inflation h months ahead (pp):
+  h=12 no controls   +0.02 (se 0.10, n=171)
+  h=12 with controls -0.10 (se 0.06, n=159)
+  h=24 no controls   -0.19 (se 0.12, n=159)
+  h=24 with controls -0.30 (se 0.06, n=147)
+VAR: response of price level (%) to a +1pp rate shock [90% band]:
+  A: prices + rate         12m +0.45 [-0.16,+1.03]  24m +0.08 [-0.81,+0.84]  36m -0.22 [-1.01,+0.59]  48m -0.26 [-0.85,+0.55]
+  B: + output              12m -0.05 [-0.47,+0.57]  24m -0.62 [-1.19,+0.30]  36m -0.88 [-1.53,+0.32]  48m -1.07 [-1.62,+0.36]
+  C: + commodity prices    12m +0.09 [-0.22,+0.48]  24m -0.33 [-0.73,+0.25]  36m -0.77 [-1.24,+0.12]  48m -1.14 [-1.69,+0.05]
