@@ -1,6 +1,6 @@
 # Data
 
-US macroeconomic series from [FRED](https://fred.stlouisfed.org) (Federal Reserve Bank of St. Louis), downloaded 16 October 2026. Values are as published by FRED on that date, unadjusted by this project.
+US macroeconomic series from [FRED](https://fred.stlouisfed.org) (Federal Reserve Bank of St. Louis), downloaded October 2026. Values are as published by FRED at the time, unadjusted by this project.
 
 ## `raw/fred_monthly.csv` (Jan 1959 to Sep 2026)
 
@@ -29,7 +29,7 @@ Most recent months may be blank where FRED hasn't published yet. October 2025 is
 
 Output gap = `100 * (GDPC1 - GDPPOT) / GDPPOT`.
 
-## UK files (downloaded 16 October 2026)
+## UK files (downloaded October 2026)
 
 | File | Columns | Source | Coverage |
 |---|---|---|---|
@@ -39,7 +39,7 @@ Output gap = `100 * (GDPC1 - GDPPOT) / GDPPOT`.
 | | IOP: index of production, CVM SA (ONS K222) | ONS | Jan 1970 to Aug 2026 |
 | `raw/uk_oecd_cpi_1970_1988.csv` | CPI_OECD: UK CPI, 2015=100 (FRED GBRCPIALLMINMEI) | OECD via FRED | Jan 1970 to Dec 1988 |
 
-## Bond yields (downloaded 16 October 2026)
+## Bond yields (downloaded October 2026)
 
 | File | Columns | Source | Coverage |
 |---|---|---|---|
