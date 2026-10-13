@@ -31,10 +31,16 @@ def _lag_matrix(y: np.ndarray, p: int) -> np.ndarray:
     return np.hstack(X)
 
 
-def fit_var(df: pd.DataFrame, p: int = 12) -> VARFit:
+def fit_var(df: pd.DataFrame, p: int = 12, keep=None) -> VARFit:
+    """OLS VAR. `keep` is an optional boolean array (one per row of df);
+    months marked False are left out of estimation, equivalent to giving
+    each excluded month its own dummy variable."""
     y = df.to_numpy(dtype=float)
     X = _lag_matrix(y, p)
     Y = y[p:]
+    if keep is not None:
+        rows = np.asarray(keep)[p:]
+        X, Y = X[rows], Y[rows]
     coefs, *_ = np.linalg.lstsq(X, Y, rcond=None)
     resid = Y - X @ coefs
     dof = Y.shape[0] - X.shape[1]
@@ -76,14 +82,16 @@ def _simulate(fit: VARFit, resid: np.ndarray) -> np.ndarray:
 
 
 def bootstrap_irf(df: pd.DataFrame, p: int, horizon: int, shock: str,
-                  reps: int = 500, seed: int = 0) -> dict:
+                  reps: int = 500, seed: int = 0, keep=None) -> dict:
     """Point estimate plus residual-bootstrap draws of the impulse responses."""
     rng = np.random.default_rng(seed)
-    fit = fit_var(df, p)
+    fit = fit_var(df, p, keep)
     point = impulse_response(fit, horizon, shock)
     draws = np.empty((reps, horizon + 1, len(fit.names)))
-    T = fit.resid.shape[0]
+    T = len(df) - p
+    n = fit.resid.shape[0]
     for r in range(reps):
-        sim = _simulate(fit, fit.resid[rng.integers(0, T, T)])
-        draws[r] = impulse_response(fit_var(pd.DataFrame(sim, columns=fit.names), p), horizon, shock)
+        sim = _simulate(fit, fit.resid[rng.integers(0, n, T)])
+        draws[r] = impulse_response(
+            fit_var(pd.DataFrame(sim, columns=fit.names), p, keep), horizon, shock)
     return {"point": point, "draws": draws, "names": fit.names, "fit": fit}

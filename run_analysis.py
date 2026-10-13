@@ -43,17 +43,39 @@ SPECS = {
 }
 RATE_NAME = {"US": "Fed funds rate", "UK": "Bank Rate"}
 
-
-def naive_correlations(df: pd.DataFrame) -> dict:
-    d = df[["rate", "infl"]].dropna()
-    return {
-        "same month": d["rate"].corr(d["infl"]),
-        "inflation 12m later": d["rate"].corr(d["infl"].shift(-12)),
-        "inflation 24m later": d["rate"].corr(d["infl"].shift(-24)),
-    }
+# Major oil supply shocks: OPEC embargo, Iranian revolution / Iran-Iraq war,
+# Gulf War. Each window runs from the shock to when oil prices settled.
+OIL_SHOCKS = [("1973-10", "1975-06"), ("1979-01", "1981-06"), ("1990-08", "1991-06")]
 
 
-def forecast_regression(df: pd.DataFrame, h: int, controls: bool):
+def outside_oil_shocks(index: pd.DatetimeIndex) -> np.ndarray:
+    keep = np.ones(len(index), dtype=bool)
+    for start, end in OIL_SHOCKS:
+        keep &= ~((index >= pd.Timestamp(start)) & (index <= pd.Timestamp(end) + pd.offsets.MonthEnd(0)))
+    return keep
+
+
+def naive_correlations(df: pd.DataFrame, exclude_shocks: bool = False) -> dict:
+    out = {}
+    for label, h in [("same month", 0), ("inflation 12m later", 12), ("inflation 24m later", 24)]:
+        d = pd.DataFrame({"rate": df["rate"], "infl": df["infl"].shift(-h)}).dropna()
+        if exclude_shocks:
+            d = d[_window_clear(d.index, h)]
+        out[label] = d["rate"].corr(d["infl"])
+    return out
+
+
+def _window_clear(index: pd.DatetimeIndex, h: int) -> np.ndarray:
+    """True where months t-12 to t+h (inputs and outcome) avoid every oil shock."""
+    shocks = [(pd.Timestamp(s), pd.Timestamp(e)) for s, e in OIL_SHOCKS]
+    clear = []
+    for t in index:
+        lo, hi = t - pd.DateOffset(months=12), t + pd.DateOffset(months=h)
+        clear.append(all(hi < s or lo > e for s, e in shocks))
+    return np.array(clear)
+
+
+def forecast_regression(df: pd.DataFrame, h: int, controls: bool, exclude_shocks: bool = False):
     """Regress inflation h months ahead on today's rate (Newey-West errors)."""
     d = pd.DataFrame({"y": df["infl"].shift(-h), "rate": df["rate"]})
     if controls:
@@ -63,6 +85,8 @@ def forecast_regression(df: pd.DataFrame, h: int, controls: bool):
         d["output_growth"] = df["output"].diff(12)
         d["commod_growth"] = df["commod"].diff(12)
     d = d.dropna()
+    if exclude_shocks:
+        d = d[_window_clear(d.index, h)]
     res = sm.OLS(d["y"], sm.add_constant(d.drop(columns="y"))).fit(
         cov_type="HAC", cov_kwds={"maxlags": h + 1})
     return res.params["rate"], res.bse["rate"], int(res.nobs)
@@ -118,12 +142,61 @@ def main() -> None:
                     rows += [dict(country=country, sample=label, method=f"VAR {spec} (output)",
                                   horizon=h, estimate=v[0], lo=v[1], hi=v[2]) for h, v in so.items()]
 
+    lines.append("\n=== Oil-shock test: main samples with oil-shock months left out ===")
+    lines.append("Excluded: " + ", ".join(f"{s} to {e}" for s, e in OIL_SHOCKS))
+    for country, samples in SAMPLES.items():
+        start, end, _ = samples[0]
+        df = load(country).loc[start:end]
+        lines.append(f"\n{country} {start} to {end}, excluding oil shocks")
+        full, excl = naive_correlations(df), naive_correlations(df, exclude_shocks=True)
+        lines.append("Naive correlation (all months -> excluding shocks):")
+        for k in full:
+            lines.append(f"  {k:22s} {full[k]:+.2f} -> {excl[k]:+.2f}")
+        lines.append("Effect of +1pp rate on inflation h months ahead, excluding shocks (pp):")
+        for h in (12, 24):
+            for ctrl in (False, True):
+                b, se, n = forecast_regression(df, h, ctrl, exclude_shocks=True)
+                tag = "with controls" if ctrl else "no controls  "
+                lines.append(f"  h={h:2d} {tag} {b:+.2f} (se {se:.2f}, n={n})")
+                rows.append(dict(country=country, sample="main excl. oil shocks",
+                                 method=f"regression {tag.strip()}", horizon=h,
+                                 estimate=b, lo=b - 1.645 * se, hi=b + 1.645 * se))
+        lines.append("VAR price level response, excluding shocks (%) [90% band]:")
+        for spec in ["A: prices + rate", "C: + commodity prices"]:
+            data = df[SPECS[spec]].dropna()
+            keep = outside_oil_shocks(data.index)
+            boot = bootstrap_irf(data, LAGS, HORIZON, "rate", reps=REPS, keep=keep)
+            boots[(country, "excl. oil shocks", spec)] = boot
+            s = summarise(boot, "prices")
+            txt = "  ".join(f"{h}m {v[0]:+.2f} [{v[1]:+.2f},{v[2]:+.2f}]" for h, v in s.items())
+            lines.append(f"  {spec:24s} {txt}")
+            for h, (pt, lo, hi) in s.items():
+                rows.append(dict(country=country, sample="main excl. oil shocks", method=f"VAR {spec}",
+                                 horizon=h, estimate=pt, lo=lo, hi=hi))
+
     text = "\n".join(lines)
     print(text)
     (OUT / "summary.txt").write_text(text + "\n")
     pd.DataFrame(rows).round(3).to_csv(OUT / "summary.csv", index=False)
     plot_price_responses(boots)
     plot_output_responses(boots)
+    plot_oil_shock_test(boots)
+
+
+def plot_oil_shock_test(boots: dict) -> None:
+    spec = "C: + commodity prices"
+    fig, axes = plt.subplots(1, 2, figsize=(11, 4.2), sharey=True)
+    for ax, country in zip(axes, ["US", "UK"]):
+        _band(ax, boots[(country, "main", spec)], "prices", "#7f8c8d", "All months")
+        _band(ax, boots[(country, "excl. oil shocks", spec)], "prices", "#16a085", "Oil-shock months left out")
+        ax.axhline(0, color="black", lw=0.8)
+        ax.set_title(f"{country}: price level after +1pp {RATE_NAME[country]} shock (spec C)")
+        ax.set_xlabel("Months after shock")
+        ax.grid(alpha=0.3)
+    axes[0].set_ylabel("% change in price level")
+    axes[0].legend(frameon=False, fontsize=9)
+    fig.tight_layout()
+    fig.savefig(OUT / "oil_shock_test.png", dpi=150, bbox_inches="tight")
 
 
 def _band(ax, boot, var, color, label):
