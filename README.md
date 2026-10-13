@@ -62,9 +62,9 @@ Main samples end in 2007, before rates hit zero and QE replaced rate changes as 
 
 | Prediction | US | UK |
 |---|---|---|
-| Output falls after a rate rise | ✅ Yes, about −1.3% | ✅ Yes, about −1.5% |
-| Prices fall after a rate rise | ⚠️ Only with controls, weak | ⚠️ Only after 1992 |
-| Effect takes 1 to 2+ years | ✅ Yes | ✅ Yes |
+| Output falls after a rate rise | Yes, about −1.3% | Yes, about −1.5% |
+| Prices fall after a rate rise | Partly: only with controls, weak | Partly: only after 1992 |
+| Effect takes 1 to 2+ years | Yes | Yes |
 
 **Verdict so far:** rate rises reliably slow the economy, but the effect on inflation is weaker, slower and more dependent on the monetary regime than the textbook suggests. The raw correlation points the wrong way.
 
