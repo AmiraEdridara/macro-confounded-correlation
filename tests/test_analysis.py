@@ -47,7 +47,16 @@ def test_seasonal_adjustment_removes_month_pattern():
     assert adj.std() < 1e-10
 
 
+CORE = ["output", "prices", "commod", "rate", "infl", "unemp"]
+
+
 def test_panels_have_expected_coverage(us, uk):
-    assert us.loc["1965":"2007"].isna().sum().sum() == 0
-    assert uk.loc["1975":"2007"].isna().sum().sum() == 0
+    assert us.loc["1965":"2007", CORE].isna().sum().sum() == 0
+    assert uk.loc["1975":"2007", CORE].isna().sum().sum() == 0
     assert uk["rate"].loc["2009-04-01"] == 0.5
+
+
+def test_yields_cover_extended_samples(us, uk):
+    assert us.loc["1965":"2026-08", "y5"].isna().sum() == 0
+    assert us.loc["1976-06":"2026-08", "y2"].isna().sum() == 0
+    assert uk.loc["1982":"2026-08", "y5"].isna().sum() == 0

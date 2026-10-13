@@ -34,7 +34,9 @@ There are also other things that move both at once. Output and demand conditions
    Results are scaled to a +1 percentage point rate rise, with 90% bootstrap bands (500 draws).
 3. **Oil-shock test.** I rerun everything leaving out the three big oil-shock periods (Oct 1973 to Jun 1975, Jan 1979 to Jun 1981, Aug 1990 to Jun 1991) to see how much they drive the results.
 
-Main samples stop at 2007, before rates hit zero and QE took over.
+4. **Going past 2007.** I swap the policy rate for the 5-year government bond yield and rerun to August 2026 (see below for why).
+
+My main samples stop at 2007. That's on purpose: from 2009 policy rates sat near zero for years (US until 2015, UK until 2021) and central banks used QE instead. A model built on rate changes breaks when rates can't move. But it also means the main results miss the 2022–23 rate rises, so I test the full period separately with bond yields.
 
 ## What I found
 
@@ -64,6 +66,22 @@ Main samples stop at 2007, before rates hit zero and QE took over.
 
 So the problem isn't mainly the unusual shock periods. It's in normal times too, which points back to the central bank reacting to inflation it expects. The model doesn't see the forecasts the central bank was looking at.
 
+### Going past 2007
+
+![Extended to 2026](results/extended_to_2026.png)
+
+Bond yields kept moving when policy rates were stuck at zero, because they react to QE and to what markets expect central banks to do next. The Bank of England database only has monthly gilt yields at 5, 10 and 20 years, so I use the 5-year yield for both countries to keep them comparable, plus the US 2-year as a check. I leave out the COVID months (March 2020 to June 2021), because the output collapse would swamp everything else.
+
+**First, the yield works as a stand-in.** Up to 2007, a +1 point rise in the US 5-year yield lowers prices by **1.1% after four years** (band below zero) and output by **1.6%** after two years. That's actually cleaner than the policy-rate results.
+
+**Adding 2008–2026 makes the effects much weaker.** With the full US sample, the price effect is close to zero (+0.15% at four years, wide band) and the output effect roughly halves (−0.7%, borderline significant). The 2-year yield gives the same picture. In the UK nothing is significant over the full period.
+
+**Why it weakens:**
+- From 2009 to 2021, yields moved a lot for reasons other than policy (QE, global demand for safe bonds), so the "rate shock" becomes noisier
+- In 2021–22, inflation shot up from supply shocks first and central banks raised rates after. That's the same reverse-causality problem as the 1970s, and this model can't fully separate it
+
+So the recent period doesn't overturn the theory, but this method can't confirm it either. A cleaner measure of policy surprises is needed for the post-2008 world.
+
 ## Theory vs what I found
 
 | Prediction | US | UK |
@@ -72,8 +90,9 @@ So the problem isn't mainly the unusual shock periods. It's in normal times too,
 | Prices fall after a rate rise | Partly: only with controls, weak | Partly: only after 1992 |
 | Effect takes 1 to 2+ years | Yes | Yes |
 | Oil shocks explain the wrong-way effect | No, only the raw correlation | No |
+| Still holds when extended to 2026 | Weaker, mostly not significant | Not significant |
 
-**So far:** rate rises clearly slow the economy. The effect on inflation is there, but it's weaker, slower and more dependent on the monetary regime than the textbook makes it sound.
+**So far:** rate rises clearly slowed the economy before 2008. The effect on inflation is there, but it's weaker, slower and more dependent on the monetary regime than the textbook makes it sound. After 2008 this method can't pin it down.
 
 ### Limitations
 
@@ -81,6 +100,8 @@ So the problem isn't mainly the unusual shock periods. It's in normal times too,
 - I use US commodity prices (PPI) as the commodity control for both countries
 - The UK model doesn't include the exchange rate yet, which matters a lot for the UK
 - UK CPI before 1988 comes from OECD data, spliced onto the ONS series
+- The main results stop at 2007. The extension to 2026 uses 5-year yields, which also move with things other than policy (QE, term premia, global bond demand)
+- The UK 5-year gilt series only starts in 1982
 
 ## What I expect next
 
@@ -90,7 +111,7 @@ So the problem isn't mainly the unusual shock periods. It's in normal times too,
 | Local projections (Jordà, 2005) | Same signs as the VAR, with wider bands |
 | Rate surprises from central bank announcement days | Cleaner shocks. Research using these finds prices fall clearly, even after 1984 |
 | Add central bank forecasts as controls | Should remove the "reacting to expected inflation" problem the oil test pointed to |
-| Extend past 2008 using 2-year yields or shadow rates | Shows whether the 2022–23 rate rises worked the same way |
+| Shadow rates for 2009–2021 | A closer measure of policy at zero than bond yields; should give clearer post-2008 results |
 | Claim 2: does money supply cause inflation? | Theory says yes in the long run. I expect a weak link in low-inflation periods |
 | Claim 3: the Phillips curve | Lower unemployment should push inflation up. I expect this link to have flattened since the 1990s |
 
@@ -109,7 +130,7 @@ pytest                      # tests, including a check against statsmodels' VAR
 ## Structure
 
 ```
-run_analysis.py      regressions, VARs, oil-shock test, charts
+run_analysis.py      regressions, VARs, oil-shock test, extension to 2026, charts
 src/load_data.py     builds the US and UK monthly panels
 src/var.py           VAR, impulse responses, bootstrap
 tests/               unit tests
